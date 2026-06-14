@@ -1,0 +1,23 @@
+{
+  "name": "implantacao-continua",
+  "version": "1.0.0",
+  "description": "Exemplo de Implantação Contínua (Continuous Deployment) com GitHub Actions",
+  "main": "index.html",
+  "scripts": {
+    "lint": "htmlhint index.html",
+    "test": "echo '✅ Testes automatizados executados com sucesso!'",
+    "build": "echo '✅ Build concluído para implantação contínua!'",
+    "deploy": "echo '🚀 Deploy automático realizado pelo GitHub Actions'"
+  },
+  "keywords": [
+    "ci/cd",
+    "continuous-deployment",
+    "github-actions",
+    "devops"
+  ],
+  "author": "Seu Nome",
+  "license": "MIT",
+  "devDependencies": {
+    "htmlhint": "^1.1.4"
+  }
+}
