@@ -1,0 +1,132 @@
+name: Implantação Contínua - CD Automático
+
+on:
+  push:
+    branches: [ "main" ]
+  # Permite execução manual também
+  workflow_dispatch:
+
+# Permissões necessárias para deploy
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Ambiente para o GitHub Pages
+environment:
+  name: github-pages
+  url: ${{ steps.deployment.outputs.page_url }}
+
+jobs:
+  # JOB 1: Validação e Build (CI)
+  validate-and-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout do código
+      uses: actions/checkout@v4
+    
+    - name: 🔧 Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: 📦 Instalar dependências
+      run: npm install
+    
+    - name: ✅ Validar HTML com HTMLHint
+      run: npx htmlhint index.html
+    
+    - name: 🔍 Validação adicional com comandos nativos
+      run: |
+        echo "🔍 Executando validações avançadas..."
+        
+        # Verificar DOCTYPE
+        if grep -q "<!DOCTYPE html>" index.html; then
+          echo "✅ DOCTYPE encontrado"
+        else
+          echo "❌ DOCTYPE não encontrado"
+          exit 1
+        fi
+        
+        # Verificar title
+        if grep -q "<title>" index.html; then
+          echo "✅ Title encontrado"
+        else
+          echo "❌ Title não encontrado"
+          exit 1
+        fi
+        
+        # Verificar estrutura básica
+        if grep -q "<html" index.html && grep -q "<body" index.html; then
+          echo "✅ Estrutura HTML completa"
+        else
+          echo "❌ Estrutura HTML incompleta"
+          exit 1
+        fi
+        
+        # Verificar CSS inline
+        if grep -q "<style>" index.html; then
+          echo "✅ CSS presente"
+        fi
+        
+        # Verificar JavaScript
+        if grep -q "<script>" index.html; then
+          echo "✅ JavaScript presente"
+        fi
+        
+        echo "🎉 Todas as validações passaram com sucesso!"
+    
+    - name: 📊 Gerar relatório de validação
+      run: |
+        echo "# Relatório de Validação - Implantação Contínua" > relatorio.txt
+        echo "Data: $(date)" >> relatorio.txt
+        echo "Arquivo: index.html" >> relatorio.txt
+        echo "Status: APROVADO" >> relatorio.txt
+        echo "Validações realizadas: HTMLHint + Comandos nativos" >> relatorio.txt
+        cat relatorio.txt
+    
+    - name: 💾 Upload do artefato (build)
+      uses: actions/upload-artifact@v4
+      with:
+        name: site-build
+        path: .
+        retention-days: 7
+
+  # JOB 2: Deploy Automático (CD)
+  automatic-deploy:
+    needs: validate-and-build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    steps:
+    - name: 📥 Baixar artefato do build
+      uses: actions/download-artifact@v4
+      with:
+        name: site-build
+        path: ./_site
+    
+    - name: 🎯 Configurar GitHub Pages
+      uses: actions/configure-pages@v4
+    
+    - name: 📤 Upload para GitHub Pages
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./_site
+    
+    - name: 🚀 Deploy Automático para Produção
+      id: deployment
+      uses: actions/deploy-pages@v4
+    
+    - name: ✅ Notificação de deploy concluído
+      run: |
+        echo "🎉 DEPLOY AUTOMÁTICO CONCLUÍDO!"
+        echo "📍 Site publicado em: ${{ steps.deployment.outputs.page_url }}"
+        echo "⏰ Data e hora: $(date)"
+        echo "🔄 Nenhuma intervenção manual necessária - Implantação Contínua 100% automatizada!"
