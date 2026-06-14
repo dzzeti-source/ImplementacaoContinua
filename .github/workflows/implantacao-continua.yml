@@ -1,4 +1,4 @@
-name: Entrega Contínua
+name: Implantação Contínua
 
 on:
   push:
@@ -19,6 +19,23 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    
+    - name: Validar HTML
+      run: |
+        echo "🔍 Validando HTML..."
+        if grep -q "<!DOCTYPE html>" index.html; then
+          echo "✅ DOCTYPE ok"
+        else
+          echo "❌ Erro: DOCTYPE não encontrado"
+          exit 1
+        fi
+        if grep -q "<title>" index.html; then
+          echo "✅ Title ok"
+        else
+          echo "❌ Erro: Title não encontrado"
+          exit 1
+        fi
+        echo "✅ HTML válido!"
     
     - name: Setup Pages
       uses: actions/configure-pages@v4
