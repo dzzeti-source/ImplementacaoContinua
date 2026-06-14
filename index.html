@@ -3,101 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Implantação Contínua - CI/CD</title>
+    <title>Entrega Contínua - CI/CD</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             text-align: center;
             padding: 50px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            min-height: 100vh;
         }
-        
         .container {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.1);
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px;
             display: inline-block;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.2);
         }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-        
-        p {
-            font-size: 1.2rem;
-            margin: 15px 0;
-        }
-        
         button {
             background: white;
             border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
+            padding: 10px 20px;
+            border-radius: 5px;
             font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
             margin-top: 20px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            color: #f5576c;
-        }
-        
-        button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .badge {
-            margin-top: 30px;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        
-        .status {
-            margin-top: 20px;
-            padding: 10px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-            font-family: monospace;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 IMPLANTAÇÃO CONTÍNUA</h1>
-        <p>Continuous Deployment com GitHub Actions</p>
-        <p>✅ Cada push na branch <strong>main</strong> é <strong>automaticamente implantado</strong> em produção!</p>
-        <p id="contador">Cliques no botão: 0</p>
-        <button onclick="contar()">🎯 Clique aqui</button>
-        <div class="status">
-            📦 Último deploy: <span id="timestamp"></span>
-        </div>
-        <div class="badge">
-            🔄 Sem aprovação manual - 100% automatizado
-        </div>
+        <h1>🚀 Entrega Contínua</h1>
+        <p>Pipeline de Continuous Delivery com GitHub Actions</p>
+        <p id="contador">Cliques: 0</p>
+        <button onclick="contar()">Clique aqui</button>
     </div>
-
     <script>
         let clicks = 0;
-        
         function contar() {
             clicks++;
-            document.getElementById('contador').innerHTML = `Cliques no botão: ${clicks}`;
+            document.getElementById('contador').innerHTML = `Cliques: ${clicks}`;
         }
-        
-        // Exibir timestamp do deploy
-        document.getElementById('timestamp').innerHTML = new Date().toLocaleString('pt-BR');
     </script>
 </body>
 </html>
